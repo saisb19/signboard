@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0" />
+		<title>Online Signature</title>
+		<link
+			rel="stylesheet"
+			href="style.css" />
+	</head>
+	<body> 
+		<nav class="navbar">
+			<div class="navbar-content">
+				<div class="navbar-brand">ONLINE SIGNATURE</div>
+				<div class="hamburger">
+					<span></span>
+					<span></span>
+					<span></span>
+				</div>
+				<ul class="navbar-menu">
+					<li><a href="index.html">Home</a></li>
+					<li><a href="signgen.html">Signature Generator</a></li>
+					<li><a href="index.html">Draw Signature</a></li>
+				</ul>
+			</div>
+		</nav>
+
+		<header class="hero">
+			<h1>Draw Your Signature Online for Free</h1>
+			<p>
+				Create your digital signature easily using our online signature pad.
+				Compatible with all devices including iPhone, iPad, Android phones,
+				tablets, and computers.
+			</p>
+		</header>
+
+		<main class="container">
+			<h2>Draw Your Signature</h2>
+			<canvas
+				id="signature-pad"
+				width="804"
+				height="304"></canvas>
+			<div class="controls">
+				<div
+					class="color-option"
+					style="
+						background-color: rgb(0, 0, 0);
+						border: 2px solid rgb(255, 255, 255);
+					"
+					data-color="#000000"></div>
+				<div
+					class="color-option"
+					style="
+						background-color: rgb(52, 152, 219);
+						border: 2px solid rgb(255, 255, 255);
+					"
+					data-color="#3498db"></div>
+				<div
+					class="color-option"
+					style="
+						background-color: rgb(231, 76, 60);
+						border: 2px solid rgb(51, 51, 51);
+					"
+					data-color="#e74c3c"></div>
+				<div
+					class="color-option"
+					style="
+						background-color: rgb(46, 204, 113);
+						border: 2px solid rgb(255, 255, 255);
+					"
+					data-color="#2ecc71"></div>
+				<div
+					class="color-option"
+					style="
+						background-color: rgb(243, 156, 18);
+						border: 2px solid rgb(255, 255, 255);
+					"
+					data-color="#f39c12"></div>
+			</div>
+			<div style="margin-top: 1rem">
+				<button
+					id="clear-btn"
+					class="btn">
+					Clear Signature
+				</button>
+				<button
+					id="download-btn"
+					class="btn">
+					Download Signature
+				</button>
+			</div>
+		</main>
+
+		<footer class="footer">
+			<h2>Sign Documents Securely Online for Free</h2>
+			<p>The #1 eSignature Solution For Your Business</p>
+		</footer>
+
+		<script src="script.js"></script>
+	</body>
+</html>
