@@ -1,92 +1,106 @@
-const canvas = document.getElementById("signature-pad");
-const ctx = canvas.getContext("2d");
-let isDrawing = false;
-let currentColor = "#000000";
-
-function resizeCanvas() {
+const canvas = function () {
+	const canvas = document.querySelector("canvas");
+	const ctx = canvas.getContext("2d");
 	canvas.width = canvas.offsetWidth;
 	canvas.height = canvas.offsetHeight;
-}
 
-window.addEventListener("resize", resizeCanvas);
-resizeCanvas();
+	let isDrawing = false;
+	let currentColor = "black";
 
-function startDrawing(e) {
-	isDrawing = true;
-	draw(e);
-}
+	function startDrawing(e) {
+		isDrawing = true;
+		draw(e); 
+	}
 
-function stopDrawing() {
-	isDrawing = false;
-	ctx.beginPath();
-}
+	function stopDrawing() {
+		isDrawing = false;
+		ctx.beginPath(); 
+	}
 
-function draw(e) {
-	if (!isDrawing) return;
+	function draw(e) {
+		if (!isDrawing) return;
 
-	const rect = canvas.getBoundingClientRect();
-	const x = e.clientX - rect.left;
-	const y = e.clientY - rect.top;
+		const rect = canvas.getBoundingClientRect(); //get boundries of canvas
+		const x = e.clientX - rect.left; //gives the mouse point on x axis
+		const y = e.clientY - rect.top; //gives the mouse point on y axis
 
-	ctx.lineWidth = 2;
-	ctx.lineCap = "round";
-	ctx.strokeStyle = currentColor;
+		ctx.lineCap = "round";
+		ctx.strokeStyle = currentColor; // Use the current color
 
-	ctx.lineTo(x, y);
-	ctx.stroke();
-	ctx.beginPath();
-	ctx.moveTo(x, y);
-}
+		ctx.lineTo(x, y);
+		ctx.stroke();
+		ctx.beginPath(); //path reset
+		ctx.moveTo(x, y);
+	}
 
-canvas.addEventListener("mousedown", startDrawing);
-canvas.addEventListener("mousemove", draw);
-canvas.addEventListener("mouseup", stopDrawing);
-canvas.addEventListener("mouseout", stopDrawing);
+	function setLineWidth(width) {
+		ctx.lineWidth = width;
+	}
 
-// Touch events for mobile devices
-canvas.addEventListener("touchstart", (e) => {
-	e.preventDefault();
-	const touch = e.touches[0];
-	startDrawing(touch);
-});
-canvas.addEventListener("touchmove", (e) => {
-	e.preventDefault();
-	const touch = e.touches[0];
-	draw(touch);
-});
-canvas.addEventListener("touchend", stopDrawing);
+	function setColor(color) {
+		currentColor = color;
+	}
 
-// Color options
-const colorOptions = document.querySelectorAll(".color-option");
-colorOptions.forEach((option) => {
-	option.addEventListener("click", () => {
-		currentColor = option.getAttribute("data-color");
-		colorOptions.forEach((opt) => (opt.style.border = "2px solid #fff"));
-		option.style.border = "2px solid #333";
+	function clearCanvas() {
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+	}
+
+	function downloadCanvas() {
+		const link = document.createElement("a");
+		link.download = "signature.png";
+		link.href = canvas.toDataURL();
+		link.click();
+	}
+
+	// Returns the necessary functions to use it outside the object
+	return {
+		canvas: canvas,
+		startDrawing: startDrawing,
+		draw: draw,
+		stopDrawing: stopDrawing,
+		setLineWidth: setLineWidth,
+		setColor: setColor,
+		clearCanvas: clearCanvas,
+		downloadCanvas: downloadCanvas,
+	};
+};
+
+// Store the returned object from the canvas function
+const canvasObj = canvas();
+
+canvasObj.canvas.addEventListener("mousedown", canvasObj.startDrawing);
+canvasObj.canvas.addEventListener("mousemove", canvasObj.draw);
+canvasObj.canvas.addEventListener("mouseup", canvasObj.stopDrawing);
+canvasObj.canvas.addEventListener("mouseout", canvasObj.stopDrawing);
+
+
+const colors = document.querySelectorAll(".colors div");
+colors.forEach((color) => {
+	color.addEventListener("click", () => {
+		const selectedColor = color.style.backgroundColor;
+		canvasObj.setColor(selectedColor);
 	});
 });
 
-// Clear button
-const clearBtn = document.getElementById("clear-btn");
-clearBtn.addEventListener("click", () => {
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
+//changing the line width
+const strokes = document.querySelectorAll(".strokes div");
+strokes.forEach((stroke) => {
+	stroke.addEventListener("click", () => {
+		if (stroke.classList.contains("stroke1")) {
+			canvasObj.setLineWidth(2);
+		} else if (stroke.classList.contains("stroke2")) {
+			canvasObj.setLineWidth(6);
+		} else if (stroke.classList.contains("stroke3")) {
+			canvasObj.setLineWidth(10);
+		}
+	});
 });
 
-// Download button
-const downloadBtn = document.getElementById("download-btn");
-downloadBtn.addEventListener("click", () => {
-	const dataURL = canvas.toDataURL("image/png");
-	const link = document.createElement("a");
-	link.download = "signature.png";
-	link.href = dataURL;
-	link.click();
+// Clear and download functions
+document.querySelector(".clear").addEventListener("click", () => {
+	canvasObj.clearCanvas();
 });
 
-// Hamburger menu
-const hamburger = document.querySelector(".hamburger");
-const navbarMenu = document.querySelector(".navbar-menu");
-
-hamburger.addEventListener("click", () => {
-	navbarMenu.classList.toggle("active");
-	hamburger.classList.toggle("active");
+document.querySelector(".download").addEventListener("click", () => {
+	canvasObj.downloadCanvas();
 });
